@@ -23,10 +23,21 @@ jobs:
           distribution: 'temurin'
           cache: gradle 
 
-      # ./gradlew की जगह हमने सीधे gradle का इस्तेमाल किया है
+      # 1. Firebase एरर से बचने के लिए एक Dummy google-services.json बनाना
+      - name: Create Dummy google-services.json
+        run: |
+          echo '{"project_info":{"project_number":"1234567890","project_id":"dummy-project"},"client":[{"client_info":{"mobilesdk_app_id":"1:1234567890:android:abcdef","android_client_info":{"package_name":"com.example.dummy"}}}]}' > app/google-services.json
+
+      # 2. Signing Error से बचने के लिए नया Debug Keystore जनरेट करना
+      - name: Generate Debug Keystore
+        run: |
+          keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "C=US, O=Android, CN=Android Debug"
+
+      # 3. ऐप बिल्ड करना (अब कोई एरर नहीं आएगा)
       - name: Build Debug APK
         run: gradle assembleDebug --stacktrace
 
+      # 4. तैयार हुए APK को GitHub पर अपलोड करना
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
