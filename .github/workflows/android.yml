@@ -22,11 +22,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # यहाँ हम खुद एक फिक्स और स्टेबल Gradle वर्ज़न सेट कर रहे हैं ताकि यह अटके नहीं
+      # यहाँ हमने वर्ज़न को प्रोजेक्ट की डिमांड के अनुसार 9.3.1 कर दिया है
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: '8.4' 
+          gradle-version: '9.3.1' 
 
       - name: Create Dummy google-services.json
         run: |
@@ -36,7 +36,6 @@ jobs:
         run: |
           keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "C=US, O=Android, CN=Android Debug"
 
-      # अब यह बिल्कुल सही वर्ज़न के साथ तेज़ी से बिल्ड करेगा
       - name: Build Debug APK
         run: gradle assembleDebug --stacktrace
 
