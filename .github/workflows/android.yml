@@ -27,10 +27,10 @@ jobs:
         with:
           gradle-version: '9.3.1' 
 
-      # यहाँ हमने पैकेज का नाम एकदम सही कर दिया है
+      # यहाँ हमने नकली फाइल में 'api_key' भी जोड़ दिया है
       - name: Create Dummy google-services.json
         run: |
-          echo '{"project_info":{"project_number":"1234567890","project_id":"dummy-project"},"client":[{"client_info":{"mobilesdk_app_id":"1:1234567890:android:abcdef","android_client_info":{"package_name":"com.aistudio.calculator.wqgztb"}}}]}' > app/google-services.json
+          echo '{"project_info":{"project_number":"1234567890","project_id":"dummy-project"},"client":[{"client_info":{"mobilesdk_app_id":"1:1234567890:android:abcdef","android_client_info":{"package_name":"com.aistudio.calculator.wqgztb"}},"api_key":[{"current_key":"dummy_api_key_123456789"}]}]}' > app/google-services.json
 
       - name: Generate Debug Keystore
         run: |
@@ -45,4 +45,3 @@ jobs:
           name: app-debug-apk
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
-          
