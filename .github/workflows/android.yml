@@ -21,27 +21,28 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle 
 
-      # 1. Firebase एरर से बचने के लिए एक Dummy google-services.json बनाना
+      # यहाँ हम खुद एक फिक्स और स्टेबल Gradle वर्ज़न सेट कर रहे हैं ताकि यह अटके नहीं
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.4' 
+
       - name: Create Dummy google-services.json
         run: |
           echo '{"project_info":{"project_number":"1234567890","project_id":"dummy-project"},"client":[{"client_info":{"mobilesdk_app_id":"1:1234567890:android:abcdef","android_client_info":{"package_name":"com.example.dummy"}}}]}' > app/google-services.json
 
-      # 2. Signing Error से बचने के लिए नया Debug Keystore जनरेट करना
       - name: Generate Debug Keystore
         run: |
           keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "C=US, O=Android, CN=Android Debug"
 
-      # 3. ऐप बिल्ड करना (अब कोई एरर नहीं आएगा)
+      # अब यह बिल्कुल सही वर्ज़न के साथ तेज़ी से बिल्ड करेगा
       - name: Build Debug APK
         run: gradle assembleDebug --stacktrace
 
-      # 4. तैयार हुए APK को GitHub पर अपलोड करना
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
-          
