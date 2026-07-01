@@ -1,0 +1,6 @@
+{
+  "name": "Scientific Calculator",
+  "description": "A clean, modern scientific calculator app featuring mathematical operations, trignometric and scientific functions, and full history logging persisted locally with Room.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
